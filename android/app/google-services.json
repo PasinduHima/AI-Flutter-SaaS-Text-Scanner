@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "943541019553",
+    "project_id": "flutter-saas-application-9d65a",
+    "storage_bucket": "flutter-saas-application-9d65a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:943541019553:android:f2b53154667b9a0406e1e0",
+        "android_client_info": {
+          "package_name": "com.example.ai_saas_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAYl7pN3qDoFct6ohZtjnon4-5bT5bTMCY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
