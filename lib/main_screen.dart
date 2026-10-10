@@ -9,6 +9,17 @@ class MainScreen extends StatefulWidget {
 }
 
 class MainScreenState extends State<MainScreen> {
+int _selectedIndex = 0 ;
+
+// handling the tapping on bottom navigation items
+void _onTapItem(int index){
+  print(index);
+  setState(() {
+    _selectedIndex = index;
+  });  
+}
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,6 +31,7 @@ class MainScreenState extends State<MainScreen> {
         label: "History",
     )
     ],
+    onTap: _onTapItem,
     ),
     );
   }
