@@ -1,3 +1,4 @@
+import 'package:ai_saas_app/constants/colors.dart';
 import 'package:ai_saas_app/widgets/image_preview.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -54,7 +55,7 @@ class _HomePageState extends State<HomePage> {
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.camera),
+                leading: const Icon(Icons.camera_alt),
                 title: const Text("Take a Image from Camera"),
                 onTap: () {
                   Navigator.pop(context);
@@ -87,13 +88,33 @@ class _HomePageState extends State<HomePage> {
                 child: ImagePreview(imagePath: pickedImagePath),
               ),
               if (!isImagePicked)
-                ElevatedButton(
-                  onPressed: _showBottomSheetWidget,
-                  child: const Text(
-                    "Pick an Image",
-                    style: TextStyle(color: Colors.white, fontSize: 18),
-                  ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    ElevatedButton(
+                      onPressed: _showBottomSheetWidget,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: mainColor,
+                      ),
+                      child: const Text(
+                        "Pick an Image",
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
+                    ),
+                  ],
                 ),
+
+                if(isImagePicked)
+                Row(children: [
+                  ElevatedButton(onPressed: () {},
+                   child: const Text(
+                    "Process Image",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18, 
+                    ),
+                    ),),
+                ],)
             ],
           ),
         ),
