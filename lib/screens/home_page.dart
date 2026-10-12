@@ -1,6 +1,7 @@
 import 'package:ai_saas_app/constants/colors.dart';
 import 'package:ai_saas_app/widgets/image_preview.dart';
 import 'package:flutter/material.dart';
+import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image_picker/image_picker.dart';
 
 class HomePage extends StatefulWidget {
@@ -12,15 +13,22 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   late ImagePicker imagePicker;
+  late TextRecognizer textRecognizer;
+
   String? pickedImagePath;
+  String recognizedText = "";
+
   bool isImagePicked = false;
+  bool isProcessing = false;
 
   @override
   void initState() {
     super.initState();
     imagePicker = ImagePicker();
+    textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
   }
 
+  // Function to pick an image
   Future<void> _pickImage({required ImageSource source}) async {
     final pickedImage = await imagePicker.pickImage(source: source);
 
@@ -32,6 +40,41 @@ class _HomePageState extends State<HomePage> {
       pickedImagePath = pickedImage.path;
       isImagePicked = true;
     });
+  }
+
+  //Function to process the picked image
+
+  Future<void> _processImage() async {
+    if (pickedImagePath == null) {
+      return;
+    }
+
+    setState(() {
+      isProcessing = true;
+      recognizedText = "";
+    });
+
+    try {
+      // Convert the selected image into an InputImage
+      final inputImage = InputImage.fromFilePath(pickedImagePath!);
+
+      // Process the image using ML Kit
+      final RecognizedText textReturnedFromModel = await textRecognizer
+          .processImage(inputImage);
+
+      // Save the recognized text
+      setState(() {
+        recognizedText = textReturnedFromModel.text;
+      });
+    } catch (e) {
+      debugPrint('Error processing image: $e');
+    } finally {
+      if (mounted) {
+        setState(() {
+          isProcessing = false;
+        });
+      }
+    }
   }
 
   // Show bottom sheet
@@ -93,28 +136,26 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     ElevatedButton(
                       onPressed: _showBottomSheetWidget,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: mainColor,
-                      ),
                       child: const Text(
-                        "Pick an Image",
+                        'Pick an image',
                         style: TextStyle(color: Colors.white, fontSize: 18),
                       ),
                     ),
                   ],
                 ),
 
-                if(isImagePicked)
-                Row(children: [
-                  ElevatedButton(onPressed: () {},
-                   child: const Text(
-                    "Process Image",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 18, 
+              if (isImagePicked)
+                Row(
+                  children: [
+                    ElevatedButton(
+                      onPressed: _processImage,
+                      child: const Text(
+                        "Process Image",
+                        style: TextStyle(color: Colors.white, fontSize: 18),
+                      ),
                     ),
-                    ),),
-                ],)
+                  ],
+                ),
             ],
           ),
         ),

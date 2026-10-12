@@ -14,9 +14,9 @@ class ImagePreview extends StatelessWidget {
       width: double.infinity,
       height: 300,
       decoration: BoxDecoration(
-        color: mainColor.withOpacity(0.1),
+        color: mainColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: mainColor.withOpacity(0.2), width: 1),
+        border: Border.all(color: mainColor.withValues(alpha: 0.2), width: 1),
       ),
       child: imagePath == null
           ? const Center(child: Icon(Icons.image, size: 300, color: mainColor))
