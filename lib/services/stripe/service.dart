@@ -1,3 +1,9 @@
+// WARNING: This service sends requests using the Stripe Secret Key.
+// In production, ALL Stripe Secret Key operations MUST be handled by
+// a secure backend (e.g., Firebase Cloud Functions, a dedicated server).
+// The Secret Key should NEVER be bundled in client-side code.
+// See: https://stripe.com/docs/keys#safe-keys
+
 import 'dart:convert';
 
 import 'package:flutter/material.dart';

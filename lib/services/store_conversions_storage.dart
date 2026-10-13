@@ -1,28 +1,35 @@
-import 'package:firebase_storage/firebase_storage.dart';
+import 'dart:io';
 
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/foundation.dart';
+import 'package:langvify/constants/strings.dart';
+
+/// Handles image uploads to Firebase Storage for conversion records.
 class StoreConversionsStorage {
-  //Firebase storage instance
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
-  Future<String> uploadImage({required postImage, required userId}) async {
-    //Create a reference to the image, here the image will be stored in the feed-images folder in the storage
-    Reference ref =
-        _storage.ref().child("conversions").child("$userId/${DateTime.now()}");
+  /// Uploads an image file and returns its download URL.
+  ///
+  /// Images are stored under `conversions/<userId>/<timestamp>`.
+  Future<String> uploadImage({
+    required File postImage,
+    required String userId,
+  }) async {
+    final ref = _storage
+        .ref()
+        .child(AppStrings.conversionsStoragePath)
+        .child('$userId/${DateTime.now().millisecondsSinceEpoch}');
 
     try {
-      UploadTask task = ref.putFile(
+      final task = ref.putFile(
         postImage,
-        SettableMetadata(
-          contentType: 'image/jpeg',
-        ),
+        SettableMetadata(contentType: 'image/jpeg'),
       );
-
-      TaskSnapshot snapshot = await task;
-      String downloadUrl = await snapshot.ref.getDownloadURL();
-      return downloadUrl;
+      final snapshot = await task;
+      return await snapshot.ref.getDownloadURL();
     } catch (e) {
-      print(e);
-      return "";
+      debugPrint('Error uploading image: $e');
+      rethrow;
     }
   }
 }

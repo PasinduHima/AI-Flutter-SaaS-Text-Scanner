@@ -4,9 +4,9 @@ import 'package:langvify/constants/colors.dart';
 
 class ImagePreview extends StatelessWidget {
   const ImagePreview({
-    Key? key,
+    super.key,
     required this.imagePath,
-  }) : super(key: key);
+  });
 
   final String? imagePath;
 
@@ -16,10 +16,10 @@ class ImagePreview extends StatelessWidget {
       width: double.infinity,
       height: 300,
       decoration: BoxDecoration(
-        color: mainColor.withOpacity(0.1),
+        color: mainColor.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
-          color: mainColor.withOpacity(0.2),
+          color: mainColor.withValues(alpha: 0.2),
           width: 1,
         ),
       ),

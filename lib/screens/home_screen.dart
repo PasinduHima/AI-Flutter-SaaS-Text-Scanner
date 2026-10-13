@@ -33,6 +33,12 @@ class _HomeScreenState extends State<HomeScreen> {
     imagePicker = ImagePicker();
   }
 
+  @override
+  void dispose() {
+    textRecognizer.close();
+    super.dispose();
+  }
+
   // Function to pick an image
   void _pickImage({required ImageSource source}) async {
     final pickedImage = await imagePicker.pickImage(source: source);
@@ -48,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   // Function to process the picked image
-  void _processImage() async {
+  Future<void> _processImage() async {
     if (pickedImagePath == null) return;
 
     setState(() {
@@ -58,47 +64,40 @@ class _HomeScreenState extends State<HomeScreen> {
 
     try {
       final inputImage = InputImage.fromFilePath(pickedImagePath!);
-      final RecognizedText recognisedText =
+      final RecognizedText result =
           await textRecognizer.processImage(inputImage);
 
-      recognizedText = "";
+      // Build the recognized text from all blocks and lines
+      final buffer = StringBuffer();
+      for (final block in result.blocks) {
+        for (final line in block.lines) {
+          buffer.writeln(line.text);
+        }
+      }
+      recognizedText = buffer.toString();
 
-      // store the conversion data in the firestore
-      try {
-        if (recognisedText.blocks.isNotEmpty) {
-          //convert the recognizedText to string
-
-          final String recognizedString = recognisedText.blocks
-              .map((block) => block.lines.map((line) => line.text).join("\n"))
-              .join("\n\n");
-          StoreConversionsFirestore().storeConversionData(
-            conversionData: recognizedString,
+      // Persist conversion data to Firestore (non-blocking on failure)
+      if (result.blocks.isNotEmpty) {
+        try {
+          await StoreConversionsFirestore().storeConversionData(
+            conversionData: recognizedText,
             convertedDate: DateTime.now(),
             imageFile: File(pickedImagePath!),
           );
-        }
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: const Text('Text recognized successfully'),
-          ),
-        );
-      } catch (e) {
-        print(e.toString());
-      }
-
-      print(recognisedText.blocks[0].lines[4].text);
-
-      // Loop through the recognized text blocks and lines and concatenate them
-      for (TextBlock block in recognisedText.blocks) {
-        for (TextLine line in block.lines) {
-          recognizedText += "${line.text}\n";
+        } catch (e) {
+          debugPrint('Failed to store conversion: $e');
         }
       }
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Text recognized successfully'),
+        ),
+      );
     } catch (e) {
-      //if the state is not mounted, return
-      if (!mounted) {
-        return;
-      }
+      if (!mounted) return;
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(

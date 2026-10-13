@@ -16,7 +16,7 @@ void main() async {
     fileName: '.env',
   );
   Stripe.publishableKey = dotenv.env['STRIPE_PUBLISHABLE_KEY'] ?? '';
-  print('Stripe key: ${Stripe.publishableKey}');
+  debugPrint('Stripe initialized');
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -46,7 +46,7 @@ class MyApp extends StatelessWidget {
         fontFamily: GoogleFonts.poppins().fontFamily,
         scaffoldBackgroundColor: Colors.white,
         appBarTheme: const AppBarTheme(
-          color: mainColor,
+          backgroundColor: mainColor,
         ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(

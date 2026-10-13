@@ -1,20 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:langvify/providers/premium_provider.dart';
-import 'package:langvify/widgets/show_premium_pannel.dart';
+import 'package:langvify/widgets/show_premium_panel.dart';
 import 'package:langvify/widgets/user_history.dart';
 
-class HistoryConversions extends StatelessWidget {
+/// Displays conversion history for premium users, or the premium
+/// activation panel for non-premium users.
+class HistoryConversions extends StatefulWidget {
   const HistoryConversions({super.key});
+
+  @override
+  State<HistoryConversions> createState() => _HistoryConversionsState();
+}
+
+class _HistoryConversionsState extends State<HistoryConversions> {
+  @override
+  void initState() {
+    super.initState();
+    // Check premium status once on init — NOT on every build
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<PremiumProvider>(context, listen: false).checkPremiumStatus();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final isPremiumProvider = Provider.of<PremiumProvider>(context);
-
-    // Check if the premium status is not loaded yet
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      isPremiumProvider.checkPremiumStatus();
-    });
 
     return Scaffold(
       appBar: AppBar(
@@ -26,7 +37,7 @@ class HistoryConversions extends StatelessWidget {
       ),
       body: isPremiumProvider.isPremium
           ? const UserHistory()
-          : ShowPremiumPannel(),
+          : const ShowPremiumPanel(),
     );
   }
 }
