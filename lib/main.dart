@@ -1,22 +1,14 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:langvify/constants/colors.dart';
-import 'package:langvify/firebase_options.dart';
-import 'package:langvify/main_screen.dart';
-import 'package:langvify/providers/premium_provider.dart';
+import 'package:ai_saas_app/constants/colors.dart';
+import 'package:ai_saas_app/firebase_options.dart';
+import 'package:ai_saas_app/main_screen.dart';
+import 'package:ai_saas_app/providers/premium_providers.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  await dotenv.load(
-    fileName: '.env',
-  );
-  Stripe.publishableKey = dotenv.env['STRIPE_PUBLISHABLE_KEY'] ?? '';
-  print('Stripe key: ${Stripe.publishableKey}');
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
@@ -27,8 +19,6 @@ void main() async {
       providers: [
         ChangeNotifierProvider(create: (context) => PremiumProvider()),
       ],
-
-      //initialize Hive
       child: const MyApp(),
     ),
   );

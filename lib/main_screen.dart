@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:langvify/constants/colors.dart';
-import 'package:langvify/screens/conversion_history.dart';
-import 'package:langvify/screens/home_screen.dart';
+import 'package:ai_saas_app/constants/colors.dart';
+import 'package:ai_saas_app/screens/conversion_history.dart';
+import 'package:ai_saas_app/screens/home_page.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});

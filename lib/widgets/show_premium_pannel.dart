@@ -1,8 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:langvify/services/stripe/stripe.dart';
-import 'package:langvify/providers/premium_provider.dart';
+import 'package:ai_saas_app/services/stripe/stripe.dart';
+import 'package:ai_saas_app/providers/premium_providers.dart';
 
 class ShowPremiumPannel extends StatefulWidget {
   const ShowPremiumPannel({super.key});
@@ -24,12 +24,20 @@ class _ShowPremiumPannelState extends State<ShowPremiumPannel> {
     caseSensitive: false,
   );
 
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _nameController.dispose();
+    super.dispose();
+  }
+
   // Form submission handler
   Future<void> _submit() async {
     if (_formKey.currentState?.validate() ?? false) {
       // Initiate payment process
       await init(email: email, name: name);
       // Notify provider to update the premium status
+      if (!mounted) return;
       Provider.of<PremiumProvider>(context, listen: false).checkPremiumStatus();
     }
   }
