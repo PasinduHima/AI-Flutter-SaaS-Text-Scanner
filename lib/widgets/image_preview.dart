@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:ai_saas_app/constants/colors.dart';
+import 'package:langvify/constants/colors.dart';
 
 class ImagePreview extends StatelessWidget {
   const ImagePreview({

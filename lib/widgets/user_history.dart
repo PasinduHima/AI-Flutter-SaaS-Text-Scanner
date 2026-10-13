@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ai_saas_app/constants/colors.dart';
-import 'package:ai_saas_app/models/conversion_model.dart';
-import 'package:ai_saas_app/services/store_conversions_firestore.dart';
+import 'package:langvify/constants/colors.dart';
+import 'package:langvify/models/conversion_model.dart';
+import 'package:langvify/services/store_conversions_firestore.dart';
 
 class UserHistory extends StatelessWidget {
   const UserHistory({super.key});

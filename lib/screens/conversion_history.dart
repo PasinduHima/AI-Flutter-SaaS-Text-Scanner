@@ -1,34 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:ai_saas_app/constants/colors.dart';
-import 'package:ai_saas_app/providers/premium_providers.dart';
-import 'package:ai_saas_app/widgets/show_premium_pannel.dart';
-import 'package:ai_saas_app/widgets/user_history.dart';
+import 'package:langvify/providers/premium_provider.dart';
+import 'package:langvify/widgets/show_premium_pannel.dart';
+import 'package:langvify/widgets/user_history.dart';
 
 class HistoryConversions extends StatelessWidget {
   const HistoryConversions({super.key});
 
   @override
   Widget build(BuildContext context) {
+    final isPremiumProvider = Provider.of<PremiumProvider>(context);
+
+    // Check if the premium status is not loaded yet
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      isPremiumProvider.checkPremiumStatus();
+    });
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Conversion History',
-          style: TextStyle(
-            color: Colors.white,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        backgroundColor: mainColor,
+        title: const Text('History Conversions',
+            style: TextStyle(
+              fontSize: 20,
+              color: Colors.white,
+            )),
       ),
-      body: Consumer<PremiumProvider>(
-        builder: (context, premiumProvider, child) {
-          if (premiumProvider.isPremium) {
-            return const UserHistory();
-          }
-          return const ShowPremiumPannel();
-        },
-      ),
+      body: isPremiumProvider.isPremium
+          ? const UserHistory()
+          : ShowPremiumPannel(),
     );
   }
 }

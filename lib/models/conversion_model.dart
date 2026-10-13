@@ -15,10 +15,10 @@ class ConversionModel {
 
   factory ConversionModel.fromMap(Map<String, dynamic> map) {
     return ConversionModel(
-      userId: map['userId'] ?? '',
-      conversionData: map['conversionData'] ?? '',
+      userId: map['userId'],
+      conversionData: map['conversionData'],
       convertedDate: (map['convertedDate'] as Timestamp).toDate(),
-      imageUrl: map['imageUrl'] ?? '',
+      imageUrl: map['imageUrl'],
     );
   }
 
@@ -26,7 +26,7 @@ class ConversionModel {
     return {
       'userId': userId,
       'conversionData': conversionData,
-      'convertedDate': Timestamp.fromDate(convertedDate),
+      'convertedDate': convertedDate,
       'imageUrl': imageUrl,
     };
   }

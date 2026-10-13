@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ai_saas_app/services/stripe/stripe_storage.dart';
+import 'package:langvify/services/stripe/stripe_storeage.dart';
 
 class PremiumProvider with ChangeNotifier {
   bool _isPremium = false;

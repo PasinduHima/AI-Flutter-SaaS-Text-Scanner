@@ -4,9 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:ai_saas_app/constants/colors.dart';
-import 'package:ai_saas_app/services/store_conversions_firestore.dart';
-import 'package:ai_saas_app/widgets/image_preview.dart';
+import 'package:langvify/constants/colors.dart';
+import 'package:langvify/widgets/image_preview.dart';
+import 'package:langvify/services/store_conversions_firestore.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -31,12 +31,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
     imagePicker = ImagePicker();
-  }
-
-  @override
-  void dispose() {
-    textRecognizer.close();
-    super.dispose();
   }
 
   // Function to pick an image
@@ -67,41 +61,39 @@ class _HomeScreenState extends State<HomeScreen> {
       final RecognizedText recognisedText =
           await textRecognizer.processImage(inputImage);
 
-      // Loop through the recognized text blocks and lines and concatenate them
-      for (TextBlock block in recognisedText.blocks) {
-        for (TextLine line in block.lines) {
-          recognizedText += "${line.text}\n";
-        }
-      }
+      recognizedText = "";
 
-      // Store the conversion data in Firestore if text was found
-      if (recognisedText.blocks.isNotEmpty) {
-        try {
+      // store the conversion data in the firestore
+      try {
+        if (recognisedText.blocks.isNotEmpty) {
+          //convert the recognizedText to string
+
           final String recognizedString = recognisedText.blocks
-              .map((block) =>
-                  block.lines.map((line) => line.text).join("\n"))
+              .map((block) => block.lines.map((line) => line.text).join("\n"))
               .join("\n\n");
           StoreConversionsFirestore().storeConversionData(
             conversionData: recognizedString,
             convertedDate: DateTime.now(),
             imageFile: File(pickedImagePath!),
           );
-        } catch (_) {
-          // Firestore storage error — silently handled
         }
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: const Text('Text recognized successfully'),
+          ),
+        );
+      } catch (e) {
+        print(e.toString());
       }
 
-      if (!mounted) return;
+      print(recognisedText.blocks[0].lines[4].text);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            recognisedText.blocks.isNotEmpty
-                ? 'Text recognized successfully'
-                : 'No text found in image',
-          ),
-        ),
-      );
+      // Loop through the recognized text blocks and lines and concatenate them
+      for (TextBlock block in recognisedText.blocks) {
+        for (TextLine line in block.lines) {
+          recognizedText += "${line.text}\n";
+        }
+      }
     } catch (e) {
       //if the state is not mounted, return
       if (!mounted) {
@@ -225,7 +217,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ),
                           if (isRecognizing) ...[
                             const SizedBox(width: 20),
-                            const SizedBox(  
+                            const SizedBox(
                               width: 16,
                               height: 16,
                               child: CircularProgressIndicator(
