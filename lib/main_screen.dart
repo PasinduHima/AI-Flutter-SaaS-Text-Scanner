@@ -1,22 +1,20 @@
-import 'package:ai_saas_app/constants/colors.dart';
-import 'package:ai_saas_app/screens/home_page.dart';
-import 'package:ai_saas_app/screens/user_history.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:langvify/constants/colors.dart';
+import 'package:langvify/screens/conversion_history.dart';
+import 'package:langvify/screens/home_screen.dart';
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
   @override
-  State<MainScreen> createState() => MainScreenState();
+  State<MainScreen> createState() => _MainScreenState();
 }
 
-class MainScreenState extends State<MainScreen> {
+class _MainScreenState extends State<MainScreen> {
   int _selectedIndex = 0;
 
-  // handling the tapping on bottom navigation items
-  void _onTapItem(int index) {
-    print(index);
+  // Method to handle the tapping on bottom navigation items
+  void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
@@ -25,21 +23,27 @@ class MainScreenState extends State<MainScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: BottomNavigationBar(
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.transform),
-            label: "Conversation",
-          ),
-          BottomNavigationBarItem(icon: Icon(Icons.history), label: "History"),
-        ],
-        onTap: _onTapItem,
-        currentIndex: _selectedIndex,
-        unselectedItemColor: const Color.fromARGB(255, 3, 42, 34),
-        selectedItemColor: const Color.fromARGB(255, 252, 254, 255),
-        backgroundColor: mainColor,
+      body: Center(
+        child: _selectedIndex == 0
+            ? const HomeScreen()
+            : const HistoryConversions(),
       ),
-      body: _selectedIndex == 0 ? const HomePage() : UserHistory(),
+      bottomNavigationBar: BottomNavigationBar(
+          items: const <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.transform),
+              label: 'Conversion',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.history),
+              label: 'History',
+            ),
+          ],
+          currentIndex: _selectedIndex,
+          unselectedItemColor: const Color.fromARGB(255, 5, 35, 61),
+          selectedItemColor: const Color.fromARGB(255, 252, 254, 255),
+          onTap: _onItemTapped,
+          backgroundColor: mainColor),
     );
   }
 }
