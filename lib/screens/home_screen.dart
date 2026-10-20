@@ -50,6 +50,16 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() {
       pickedImagePath = pickedImage.path;
       isImagePicked = true;
+      recognizedText = ""; // Clear previous results when picking a new image
+    });
+  }
+
+  /// Resets the screen state so the user can start a new conversion.
+  void _resetImage() {
+    setState(() {
+      pickedImagePath = null;
+      isImagePicked = false;
+      recognizedText = "";
     });
   }
 
@@ -182,10 +192,27 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 child: ImagePreview(imagePath: pickedImagePath),
               ),
-              if (!isImagePicked) // Show "Pick Image" button if image is not picked
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  if (isImagePicked && !isRecognizing) ...[
+                    // Allow picking a new image (reset)
+                    ElevatedButton(
+                      onPressed: _resetImage,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.grey.shade400,
+                      ),
+                      child: const Text(
+                        'New Image',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(width: 10),
+                  ],
+                  if (!isImagePicked)
                     ElevatedButton(
                       onPressed: isRecognizing ? null : _chooseImageSourceModal,
                       child: const Text(
@@ -196,12 +223,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ),
-                  ],
-                ),
-              if (isImagePicked) // Show "Process Image" button if image is picked
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
+                  if (isImagePicked)
                     ElevatedButton(
                       onPressed: isRecognizing ? null : _processImage,
                       child: Row(
@@ -227,8 +249,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         ],
                       ),
                     ),
-                  ],
-                ),
+                ],
+              ),
               const SizedBox(height: 20),
               Padding(
                 padding: const EdgeInsets.only(

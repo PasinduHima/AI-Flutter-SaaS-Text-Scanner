@@ -15,11 +15,19 @@ class ConversionModel {
 
   factory ConversionModel.fromMap(Map<String, dynamic> map) {
     return ConversionModel(
-      userId: map['userId'],
-      conversionData: map['conversionData'],
-      convertedDate: (map['convertedDate'] as Timestamp).toDate(),
-      imageUrl: map['imageUrl'],
+      userId: map['userId'] as String? ?? '',
+      conversionData: map['conversionData'] as String? ?? '',
+      convertedDate: _parseDate(map['convertedDate']),
+      imageUrl: map['imageUrl'] as String? ?? '',
     );
+  }
+
+  /// Safely parses a Firestore date field that may be a [Timestamp],
+  /// a [DateTime], or null.
+  static DateTime _parseDate(dynamic value) {
+    if (value is Timestamp) return value.toDate();
+    if (value is DateTime) return value;
+    return DateTime.now();
   }
 
   Map<String, dynamic> toMap() {

@@ -1,5 +1,5 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android" 
-package="com.google_mlkit_text_recognition">
+package="com.example.langvify">
     <application
         android:label="langvify"
         android:name="${applicationName}"

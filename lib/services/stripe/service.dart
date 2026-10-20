@@ -37,11 +37,11 @@ Future<Map<String, dynamic>?> apiService({
     if (requestResponse.statusCode == 200) {
       return json.decode(requestResponse.body);
     } else {
-      debugPrint('Error: ${requestResponse.body}');
-      throw Exception('Failed to fetch data: ${requestResponse.body}');
+      debugPrint('Stripe API error (${requestResponse.statusCode}): ${requestResponse.body}');
+      return null;
     }
   } catch (err) {
-    debugPrint("Error: $err");
-    return null; // Return null if there's an error
+    debugPrint("Network error calling Stripe API: $err");
+    return null;
   }
 }

@@ -52,8 +52,8 @@ class _ShowPremiumPanelState extends State<ShowPremiumPanel> {
 
       if (!mounted) return;
 
-      // Refresh premium status after successful payment
-      Provider.of<PremiumProvider>(context, listen: false).checkPremiumStatus();
+      // Immediately activate premium in the UI after successful payment
+      Provider.of<PremiumProvider>(context, listen: false).activatePremium();
     } catch (e) {
       if (!mounted) return;
       setState(() {

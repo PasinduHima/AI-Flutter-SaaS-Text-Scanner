@@ -61,6 +61,7 @@ class StoreConversionsFirestore {
     return _firestore
         .collection(AppStrings.conversionsCollection)
         .where('userId', isEqualTo: userId)
+        .orderBy('convertedDate', descending: true)
         .snapshots()
         .map((snapshot) {
       return snapshot.docs.map((doc) {
